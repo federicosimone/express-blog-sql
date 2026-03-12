@@ -1,7 +1,22 @@
-const posts = require('../data/posts')
+const dbConnection = require('../data/db');
 
 function index(req, res) {
-    res.json(posts);
+
+
+
+    const sqlQuery = "SELECT * FROM posts";
+
+    dbConnection.query(sqlQuery, (error, rows) => {
+        if (error) {
+            return res.status(500).json({ error: "DB Error", message: "Errore nel recuperare i dati dal DB" });
+        }
+
+        let results = rows;
+
+
+
+        res.json(results);
+    });
 }
 
 function store(req, res) {

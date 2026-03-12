@@ -16,4 +16,4 @@ function onDatabaseConnection(error) {
 const db = mysql.createConnection(dbConfiguration);
 db.connect(onDatabaseConnection);
 
-module.export = dbConnection
+module.export = db
