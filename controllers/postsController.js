@@ -58,17 +58,18 @@ function destroy(req, res) {
         return res.status(400).json({ error: "Error", message: "ID non valido" });
     }
 
-    const result = posts.find(post => post.id == id);
+    const sqlQuery = "DELETE FROM posts WHERE id = ?";
+    const parametriQuery = [id];
 
-    if (!result) {
-        return res.status(404).json({ error: "Not Found", message: "Post non trovato" });
-    }
+    dbConnection.query(sqlQuery, parametriQuery, error => {
+        if (error) {
+            return res.status(500).json({ error: "DB Error", message: "Impossile eliminare il post" })
+        }
 
-    posts.splice(posts.indexOf(result), 1)
+        res.json({ message: `Post ${id} eliminato con successo` });
+    })
 
-    console.log(posts);
 
-    return res.sendStatus(204);
 }
 
 
