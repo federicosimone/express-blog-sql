@@ -41,13 +41,16 @@ function show(req, res) {
         return res.status(400).json({ error: "Error", message: "ID non valido" });
     }
 
-    const result = posts.find(post => post.id == id);
+    const sqlQuery = "SELECT FROM posts WHERE id = ?";
+    const parametriQuery = [id];
 
-    if (!result) {
-        return res.status(404).json({ error: "Not Found", message: "Post non trovato" });
-    }
+    dbConnection.query(sqlQuery, parametriQuery, error => {
+        if (error) {
+            return res.status(500).json({ error: "DB Error", message: "Impossile eliminare il post" })
+        }
 
-    return res.json(result);
+        res.json(sqlQuery);
+    })
 
 }
 
@@ -66,7 +69,7 @@ function destroy(req, res) {
             return res.status(500).json({ error: "DB Error", message: "Impossile eliminare il post" })
         }
 
-        res.json({ message: `Post ${id} eliminato con successo` });
+        res.sendStatus(204);
     })
 
 
