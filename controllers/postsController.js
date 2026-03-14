@@ -2,8 +2,6 @@ const dbConnection = require('../data/db');
 
 function index(req, res) {
 
-
-
     const sqlQuery = "SELECT * FROM posts";
 
     dbConnection.query(sqlQuery, (error, rows) => {
@@ -19,6 +17,8 @@ function index(req, res) {
     });
 }
 
+//
+
 function store(req, res) {
 
     const newPost = {
@@ -33,46 +33,63 @@ function store(req, res) {
     res.status(201).json(newPost);
 }
 
+//
+
 function show(req, res) {
 
     const id = Number(req.params.id);
 
-    if (id < 0) {
+    if (isNaN(id)) {
         return res.status(400).json({ error: "Error", message: "ID non valido" });
     }
 
-    const result = posts.find(post => post.id == id);
+    //dbConnection.query(sqlQuery,parametriQuery,callback)
 
-    if (!result) {
-        return res.status(404).json({ error: "Not Found", message: "Post non trovato" });
-    }
+    const sqlQuery = "SELECT * FROM posts WHERE id = ?"
+    const parametriQuery = [id]
 
-    return res.json(result);
+    dbConnection.query(sqlQuery, parametriQuery, (error, result) => {
+        if (error) {
+            return res.status(500).json({ error: "DB Error", message: "Impossile eseguire la richiesta" })
+        }
 
-}
+        if (result.length === 0) {
+            return res.status(404).json({ error: "Not Found", message: "Impossile trovare il post" })
+        }
+
+        res.json(result[0]) //indice 0 perchè nello show ci interessa vedere la prima e unica riga del db , ovvero, quella chiamata con l'id. 
+        // a differenza dell' index che invece mi mostra TUTTI i dati e quindi non mi serve un indice, perchè li voglio tutti 
+    });
+
+
+};
+//
+
 
 function destroy(req, res) {
-    const id = Number(req.params.id);
+    const id = Number(req.params.id); //id diventa una variabile che riceve il parametro inserito dall'utente
 
-    if (id < 0) {
+    if (isNaN(id)) {
         return res.status(400).json({ error: "Error", message: "ID non valido" });
     }
 
     const sqlQuery = "DELETE FROM posts WHERE id = ?";
-    const parametriQuery = [id];
+    const parametriQuery = [id];  //recuperato nella prima riga
+
+    //SINTASSI:  dbConnection.query(sqlQuery, parametriQuery, callback)  
 
     dbConnection.query(sqlQuery, parametriQuery, error => {
         if (error) {
-            return res.status(500).json({ error: "DB Error", message: "Impossile eliminare il post" })
+            res.status(500).json({ error: "DB Error", message: "Impossile eliminare il post" })
         }
 
-        res.sendStatus(204);
+        return res.sendStatus(204);
     })
 
 
 }
 
-
+//
 
 function update(req, res) { //modifico interamente l'elemento 
 
@@ -108,6 +125,8 @@ function update(req, res) { //modifico interamente l'elemento
 
     return res.json(result);
 }
+
+//
 
 function modify(req, res) { //modifico parzialmente l'elemento 
 
