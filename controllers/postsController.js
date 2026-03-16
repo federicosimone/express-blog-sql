@@ -50,9 +50,9 @@ function show(req, res) {
 
     const sqlQuerytags = `
         SELECT T.*
-        FROM blog.tags T
+        FROM tags T
         JOIN post_tag
-        ON post_tag.tag_id = tags.id
+        ON post_tag.tag_id = T.id
         WHERE post_tag.post_id = ? `;
 
     dbConnection.query(sqlQuery, parametriQuery, (error, postResult) => {
@@ -64,7 +64,7 @@ function show(req, res) {
             return res.status(404).json({ error: "Not Found", message: "Impossile trovare il post" })
         }
 
-        const risultatoPost = postResult[0] //indice 0 perchè nello show ci interessa vedere la prima e unica riga del db , ovvero, quella chiamata con l'id. 
+        const risultatoPost = postResult[0]; //indice 0 perchè nello show ci interessa vedere la prima e unica riga del db , ovvero, quella chiamata con l'id. 
         // a differenza dell' index che invece mi mostra TUTTI i dati e quindi non mi serve un indice, perchè li voglio tutti 
 
         dbConnection.query(sqlQuerytags, parametriQuery, (error, tagsResult) => {
@@ -73,9 +73,10 @@ function show(req, res) {
             };
             console.log(tagsResult)
 
-            risultatoPost.tags = tagsResult
+            risultatoPost.tags = tagsResult;
             res.json(risultatoPost)
-        })
+        });
+
     });
 
 
