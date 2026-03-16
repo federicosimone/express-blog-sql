@@ -49,8 +49,8 @@ function show(req, res) {
     const parametriQuery = [id]
 
     const sqlQuerytags = `
-        SELECT *
-        FROM blog.tags 
+        SELECT T.*
+        FROM blog.tags T
         JOIN post_tag
         ON post_tag.tag_id = tags.id
         WHERE post_tag.post_id = ? `;
@@ -60,7 +60,7 @@ function show(req, res) {
             return res.status(500).json({ error: "DB Error", message: "Impossile eseguire la richiesta" })
         }
 
-        if (result.length === 0) {
+        if (postResult.length === 0) {
             return res.status(404).json({ error: "Not Found", message: "Impossile trovare il post" })
         }
 
