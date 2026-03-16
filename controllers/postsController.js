@@ -146,25 +146,36 @@ function update(req, res) { //modifico interamente l'elemento
 
     //creo costante con cui trovo l'elemento che cerco all'interno dell'array 
 
-    const result = posts.find(post => post.id == id);
+    /*const result = posts.find(post => post.id == id);
 
     //se non trovo il risultato restituisco l'errore
 
     if (!result) {
         return res.status(404).json({ error: "Not Found", message: "Post non trovato" });
-    }
+    }*/
 
     //sto comunicando che la proprietà di result (result.proprietà) deve modificarsi in base a cosa viene fornito dall' oggetto
     //fornito nel body di postman (req.body.proprietà)
 
-    result.title = req.body.title
+    /*result.title = req.body.title
     result.content = req.body.content
     result.image = req.body.image
-    result.tags = req.body.tags
+    result.tags = req.body.tags*/
 
     //restituisco un json del solo elemento modificato 
 
-    return res.json(result);
+    const { title, content, image } = req.body;
+
+    const sqlQueryUpdate = "UPDATE posts SET title = ?, content= ?, image = ? WHERE id = ?"
+
+    dbConnection.query(
+        sqlQueryUpdate,
+        [title, content, image, id],
+        (error) => {
+            if (error) return res.status(500).json({ error: "FAILED TO UPDATE POST" });
+            res.json({ message: "Post updated successfully" })
+        }
+    )
 }
 
 //
