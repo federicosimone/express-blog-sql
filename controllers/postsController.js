@@ -67,14 +67,14 @@ function show(req, res) {
         const risultatoPost = postResult[0]; //indice 0 perchè nello show ci interessa vedere la prima e unica riga del db , ovvero, quella chiamata con l'id. 
         // a differenza dell' index che invece mi mostra TUTTI i dati e quindi non mi serve un indice, perchè li voglio tutti 
 
-        dbConnection.query(sqlQuerytags, parametriQuery, (error, tagsResult) => {
+        dbConnection.query(sqlQuerytags, parametriQuery, (error, tagsResult) => {  //eseguo la seconda query per i tags
             if (error) {
                 return res.status(500).json({ error: "Database query failed" })
             };
             console.log(tagsResult)
 
-            risultatoPost.tags = tagsResult;
-            res.json(risultatoPost)
+            risultatoPost.tags = tagsResult;  //aggiungo al post una proprietà chiamata "tags", all'interno dell'oggetto "risultatoPost" che corrisponde
+            res.json(risultatoPost)           //al risultato della query riferita ai tags. 
         });
 
     });
