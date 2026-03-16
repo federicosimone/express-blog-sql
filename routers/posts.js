@@ -7,7 +7,7 @@ const postsController = require("../controllers/postsController")
 
 //Crud - Create 
 
-router.post('/', postsController.index)
+//router.post('/', postsController.index)
 
 router.post('/', postsController.store)
 

@@ -21,7 +21,29 @@ function index(req, res) {
 
 function store(req, res) {
 
-    const newPost = {
+    console.log('STORE CALLED');
+    console.log('BODY:', req.body);
+
+    const { title, content, image } = req.body;
+
+
+
+    const sqlQueryIns = "INSERT INTO posts (title, content, image) VALUES (?, ?, ?)";
+    console.log(dbConnection.state)
+    console.log('BODY:', req.body);
+
+
+    dbConnection.query(
+        sqlQueryIns,
+        [title, content, image],
+        (error, results) => {
+            if (error) return res.status(500).json({ error: 'Failed to insert post' });
+            res.status(201).json({ id: results.insertId });
+            console.log(results);
+        }
+    );
+
+    /*const newPost = {
         id: posts[posts.length - 1].id + 1,
         title: req.body.title,
         content: req.body.content,
@@ -29,8 +51,9 @@ function store(req, res) {
         tags: req.body.tags
     };
     posts.push(newPost)
-    console.log(newPost)
-    res.status(201).json(newPost);
+    console.log(newPost)*/
+
+
 }
 
 //
