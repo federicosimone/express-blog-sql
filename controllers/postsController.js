@@ -166,11 +166,12 @@ function update(req, res) { //modifico interamente l'elemento
 
     const { title, content, image } = req.body;
 
-    const sqlQueryUpdate = "UPDATE posts SET title = ?, content= ?, image = ? WHERE id = ?"
+    const sqlQueryUpdate = "UPDATE posts SET title = ?, content= ?, image = ? WHERE id = ?";
+    const parametriQueryUpdate = [title, content, image, id];
 
     dbConnection.query(
         sqlQueryUpdate,
-        [title, content, image, id],
+        parametriQueryUpdate,
         (error) => {
             if (error) return res.status(500).json({ error: "FAILED TO UPDATE POST" });
             res.json({ message: "Post updated successfully" })
